@@ -1,0 +1,19 @@
+.hero-3d {
+  background-color: #0a142f;
+  color: #fff;
+}
+.karakter-3d {
+  width: 180px;
+  max-width: 100%;
+}
+
+.mockup-desain {
+  max-width: 320px;
+  width: 100%;
+}
+
+.floating-box {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+}

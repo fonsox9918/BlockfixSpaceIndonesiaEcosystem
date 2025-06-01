@@ -1,0 +1,182 @@
+.about-page {
+  background-color: #0a142f; /* Background utama */
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100vh;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+}
+
+.section {
+  padding: 120px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.intro-section {
+  /* Hapus line ini: height: 20vh; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 10px !important; /* Sesuaikan nilai */
+}
+
+.section-title {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #00c6ff; /* Biru neon */
+}
+
+.section-description {
+  font-size: 20px;
+  max-width: 800px;
+  margin: auto;
+  color: #cfcfcf;
+}
+
+.container {
+  max-width: 1300px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.grid-2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.grid-2.reverse {
+  flex-direction: row-reverse;
+}
+
+.grid-3 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.text-block {
+  flex: 1;
+  min-width: 300px;
+}
+
+.text-block h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #00c6ff;
+}
+
+.text-block p, .text-block ul {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #d0d0d0;
+}
+
+.text-block ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.image-block {
+  flex: 1;
+  text-align: center;
+}
+
+.image-block img {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 198, 255, 0.3);
+}
+
+.center-content {
+  text-align: center;
+}
+
+.product-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  width: 300px;
+  transition: all 0.4s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.product-card img {
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.product-card h3 {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.-image {
+  width: 80%;
+  max-width: 600px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 198, 255, 0.2);
+}
+
+.cta-section {
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  padding: 100px 20px;
+  text-align: center;
+  color: white;
+}
+
+.cta-title {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.cta-description {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid #ffffff;
+  border-radius: 30px;
+  padding: 12px 40px;
+  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.4s;
+}
+
+.cta-button:hover {
+  background: white;
+  color: #0072ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid-2, .grid-2.reverse {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-card {
+    width: 90%;
+  }
+}

@@ -1,0 +1,151 @@
+/* Base Styles with Your Color */
+.feature-section {
+  background-color: #0a142f; /* Your requested dark blue */
+  padding: 5rem 0;
+  min-height: 50vh;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-title {
+  text-align: center;
+  color: #4fc3f7;
+  margin-bottom: 4rem;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Enhanced Grid Layout */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+/* Glassmorphism Card Design */
+.feature-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Content Structure */
+.feature-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-icon-container {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(79, 195, 247, 0.1);
+  border-radius: 50%;
+  border: 1px solid rgba(79, 195, 247, 0.2);
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.feature-text {
+  flex: 1;
+  padding: 0 0.5rem;
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  color: #4fc3f7;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.feature-cta {
+  margin-top: auto;
+  text-align: center;
+}
+
+/* Hover Effects */
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(79, 195, 247, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+  
+  .feature-grid {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .feature-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-section {
+    padding: 3rem 0;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .feature-card {
+    padding: 1.75rem;
+  }
+  
+  .feature-icon-container {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1.25rem;
+  }
+}

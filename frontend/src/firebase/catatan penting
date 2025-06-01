@@ -1,0 +1,16 @@
+///🧠 Cara Pakai di Halaman Admin
+///import { uploadProductImage } from "@/firebase/adminUploadService";
+
+//const handleUpload = async () => {
+ // const file = selectedFile;
+ // const productId = generatedProductId;
+
+ // try {
+ //   const imageUrl = await uploadProductImage(file, productId, (progress) => {
+ //     setUploadProgress(progress);
+ //   });
+ //   console.log("Image URL:", imageUrl);
+ // } catch (err) {
+  //  console.error("Upload failed", err);
+  //}
+//};
