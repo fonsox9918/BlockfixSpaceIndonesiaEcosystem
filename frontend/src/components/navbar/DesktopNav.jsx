@@ -16,7 +16,7 @@ export default function DesktopNav() {
 
   const menuItems = [
     { label: "Beranda", icon: <Home className="w-4 h-4" />, link: "/" },
-    { label: "Layanan", icon: <Settings className="w-4 h-4" />, link: "#", dropdown: true },
+    { label: "Layanan", icon: <Settings className="w-4 h-4" />, link: "", dropdown: true },
     { label: "Tentang", icon: <Info className="w-4 h-4" />, link: "#", dropdown: true },
     { label: "Fitur", icon: <Star className="w-4 h-4" />, link: "#", dropdown: true },
   ];

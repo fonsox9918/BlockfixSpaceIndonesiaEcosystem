@@ -68,7 +68,7 @@ function AppContent() {
           <Route path="/complete-registration" element={<CompleteRegistration />} />
 
           {/* Admin Routes */}
-          <Route
+          <Route 
             path="/admin/*"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
