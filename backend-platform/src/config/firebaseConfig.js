@@ -5,7 +5,8 @@ const path = require('path');
 
 dotenv.config();
 
-const serviceAccount = require(path.join(__dirname, '../../../adminSDK/serviceAccountKey.json'));
+const serviceAccount = require(path.join(__dirname, '../../../blockfix-tools/serviceAccountKey.json'));
+
 
 if (!admin.apps.length) {
   admin.initializeApp({

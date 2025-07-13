@@ -4,6 +4,7 @@ import {
   Settings,
   Info,
   Star,
+  ShoppingBag,
   ChevronDown,
 } from "lucide-react";
 import UserMenu from "./UserMenu";
@@ -16,8 +17,8 @@ export default function DesktopNav() {
 
   const menuItems = [
     { label: "Beranda", icon: <Home className="w-4 h-4" />, link: "/" },
-    { label: "Layanan", icon: <Settings className="w-4 h-4" />, link: "", dropdown: true },
-    { label: "Tentang", icon: <Info className="w-4 h-4" />, link: "#", dropdown: true },
+    { label: "Marketplace", icon: <ShoppingBag className="w-4 h-4" />, link: "/marketplace" },
+    { label: "Tentang", icon: <Info className="w-4 h-4" />, link: "/about" },
     { label: "Fitur", icon: <Star className="w-4 h-4" />, link: "#", dropdown: true },
   ];
 
@@ -53,7 +54,7 @@ export default function DesktopNav() {
         {currentUser ? (
           <UserMenu />
         ) : (
-          <Link to="/auth">
+          <Link to="/login-email" className="no-underline">
             <Button className="bg-[#7C3AED] text-white hover:bg-[#6B21A8] px-6">
               Login
             </Button>

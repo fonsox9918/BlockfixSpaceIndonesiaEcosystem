@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -135,9 +135,9 @@ const Register = () => {
 
         <p className="mt-6 text-sm text-gray-600 text-center">
           Anda sudah punya akun blockfix?{" "}
-          <a href="/login-email" className="text-blue-600 hover:underline">
+          <Link to="/login-email" className="text-blue-600 hover:underline no-underline">
             Masuk di sini
-          </a>
+          </Link>
         </p>
       </div>
     </div>

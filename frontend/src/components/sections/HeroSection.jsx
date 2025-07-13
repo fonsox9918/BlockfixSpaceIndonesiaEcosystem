@@ -50,7 +50,7 @@ export default function HeroSection() {
                 Konsultasi Gratis
               </button>
             </Link>
-            <Link to="/layanan" className="no-underline">
+            <Link to="/marketplace" className="no-underline">
               <button className="flex items-center justify-center gap-2 px-4 py-2 h-12 text-sm font-medium bg-gradient-to-r from-[#7C3AED] to-[#4FACFE] text-white rounded-xl shadow-md transition hover:opacity-90">
                 Lihat Produk Jasa
               </button>

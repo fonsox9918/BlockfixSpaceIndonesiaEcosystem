@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import logo from "../../assets/logo.png";
 import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
@@ -25,16 +26,16 @@ const Footer = () => {
               ruang kerja yang meningkatkan produktivitas dan nilai properti Anda.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#1877F2]">
+              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#1877F2] no-underline">
                 <FaFacebookF className="text-lg" />
               </a>
-              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#E4405F]">
+              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#E4405F] no-underline">
                 <FaInstagram className="text-lg" />
               </a>
-              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#1DA1F2]">
+              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#1DA1F2] no-underline">
                 <FaTwitter className="text-lg" />
               </a>
-              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#0A66C2]">
+              <a href="#" className="p-2 rounded-full bg-[#1e293b] hover:bg-opacity-80 transition-all text-[#0A66C2] no-underline">
                 <FaLinkedinIn className="text-lg" />
               </a>
             </div>
@@ -123,15 +124,15 @@ const Footer = () => {
             © {new Date().getFullYear()} PT Blockfix Solusi Interior. Seluruh hak cipta dilindungi.
           </p>
           <div className="flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-[#00F2FE] transition-colors text-xs">
+            <Link to="/privacy-policy" className="text-gray-400 hover:text-[#00F2FE] transition-colors text-xs no-underline">
               Kebijakan Privasi
-            </a>
-            <a href="#" className="text-gray-400 hover:text-[#00F2FE] transition-colors text-xs">
+            </Link>
+            <Link to="/terms-of-service" className="text-gray-400 hover:text-[#00F2FE] transition-colors text-xs no-underline">
               Syarat Layanan
-            </a>
-            <a href="#" className="text-gray-400 hover:text-[#00F2FE] transition-colors text-xs">
+            </Link>
+            <Link to="/portfolio" className="text-gray-400 hover:text-[#00F2FE] transition-colors text-xs no-underline">
               Portofolio Klien
-            </a>
+            </Link>
           </div>
         </div>
       </div>

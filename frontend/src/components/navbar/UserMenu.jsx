@@ -51,11 +51,11 @@ export default function UserMenu() {
             </p>
           </div>
           <ul className="py-1 text-sm text-zinc-800 dark:text-zinc-100">
-            <li><Link to="/account" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"><User className="mr-2 w-4 h-4" /> Akun Saya</Link></li>
-            <li><Link to="/messages" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"><MessageCircle className="mr-2 w-4 h-4" /> Pesan</Link></li>
-            <li><Link to="/dashboard" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"><LayoutDashboard className="mr-2 w-4 h-4" /> Dashboard</Link></li>
-            <li><Link to="/projects" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"><Folder className="mr-2 w-4 h-4" /> Proyek</Link></li>
-            <li><Link to="/settings" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"><Settings className="mr-2 w-4 h-4" /> Pengaturan</Link></li>
+            <li><Link to="/account-page" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 no-underline"><User className="mr-2 w-4 h-4" /> Akun Saya</Link></li>
+            <li><Link to="/myorders" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 no-underline"><MessageCircle className="mr-2 w-4 h-4" /> Pesanan Saya</Link></li>
+            <li><Link to="/dashboard" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 no-underline"><LayoutDashboard className="mr-2 w-4 h-4" /> Dashboard</Link></li>
+            <li><Link to="/project-tracker" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 no-underline"><Folder className="mr-2 w-4 h-4" /> Proyek</Link></li>
+            <li><Link to="/account-page" className="flex items-center px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 no-underline"><Settings className="mr-2 w-4 h-4" /> Pengaturan</Link></li>
           </ul>
           <button
             onClick={handleLogout}

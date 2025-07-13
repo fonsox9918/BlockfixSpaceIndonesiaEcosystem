@@ -18,9 +18,15 @@ const quickAccess = [
 
 const QuickAccessSection = () => {
   return (
-    <div className="mt-6">
+    <div className="mt-6 lg:mt-8">
+      {/* Section Title */}
+      <div className="mb-6">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Akses Cepat</h2>
+        <p className="text-gray-600">Navigasi cepat ke fitur utama</p>
+      </div>
+
       {/* Desktop layout */}
-      <div className="hidden md:grid grid-cols-4 gap-4">
+      <div className="hidden md:grid grid-cols-4 gap-4 lg:gap-6">
         {quickAccess.map((item, idx) => (
           <motion.div
             key={item.to}
@@ -31,17 +37,19 @@ const QuickAccessSection = () => {
             whileTap="whileTap"
             transition={{ delay: idx * 0.1 }}
           >
-            <Link to={item.to} className="flex flex-col items-center justify-center p-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md h-24">
-              {item.icon}
-              <span className="mt-2 text-sm">{item.label}</span>
+            <Link to={item.to} className="flex flex-col items-center justify-center p-6 rounded-xl bg-white border border-gray-200 text-gray-700 shadow-lg hover:shadow-xl transition-shadow h-28 lg:h-32">
+              <div className="text-[#7C3AED] mb-3">
+                {item.icon}
+              </div>
+              <span className="text-sm lg:text-base font-medium">{item.label}</span>
             </Link>
           </motion.div>
         ))}
       </div>
 
       {/* Mobile layout */}
-      <div className="md:hidden flex">
-        <div className="flex flex-col gap-2 w-1/2">
+      <div className="md:hidden flex gap-3">
+        <div className="flex flex-col gap-3 w-1/2">
           {quickAccess.slice(0, 3).map((item, idx) => (
             <motion.div
               key={item.to}
@@ -52,15 +60,17 @@ const QuickAccessSection = () => {
               whileTap="whileTap"
               transition={{ delay: idx * 0.1 }}
             >
-              <Link to={item.to} className="flex flex-col items-center justify-center p-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md h-20">
-                {item.icon}
-                <span className="mt-1 text-xs">{item.label}</span>
+              <Link to={item.to} className="flex flex-col items-center justify-center p-4 rounded-xl bg-white border border-gray-200 text-gray-700 shadow-lg h-20">
+                <div className="text-[#7C3AED] mb-2">
+                  {item.icon}
+                </div>
+                <span className="text-xs font-medium">{item.label}</span>
               </Link>
             </motion.div>
           ))}
         </div>
         <motion.div
-          className="ml-2 w-1/2 h-full"
+          className="w-1/2 h-full"
           variants={buttonVariants}
           initial="initial"
           animate="animate"
@@ -68,9 +78,11 @@ const QuickAccessSection = () => {
           whileTap="whileTap"
           transition={{ delay: 0.3 }}
         >
-          <Link to={quickAccess[3].to} className="flex flex-col items-center justify-center h-full p-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md min-h-[252px]">
-            {quickAccess[3].icon}
-            <span className="mt-2 text-sm">{quickAccess[3].label}</span>
+          <Link to={quickAccess[3].to} className="flex flex-col items-center justify-center h-full p-4 rounded-xl bg-white border border-gray-200 text-gray-700 shadow-lg min-h-[252px]">
+            <div className="text-[#7C3AED] mb-3">
+              {quickAccess[3].icon}
+            </div>
+            <span className="text-sm font-medium">{quickAccess[3].label}</span>
           </Link>
         </motion.div>
       </div>

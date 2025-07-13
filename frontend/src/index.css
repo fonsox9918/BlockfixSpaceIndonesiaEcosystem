@@ -25,6 +25,16 @@ body {
   text-wrap: balance;
 }
 
+/* Remove underlines from all links globally */
+a, .no-underline {
+  text-decoration: none !important;
+}
+
+/* Ensure hover states still work for links that need underlines */
+a:hover.hover-underline {
+  text-decoration: underline !important;
+}
+
 /* ==========================
    🎨 CUSTOM CLASSES (ACTION UI)
    ========================== */

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -155,15 +155,15 @@ const LoginEmail = () => {
 
         <div className="text-center text-sm text-gray-500 mt-6">
           Belum punya akun?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-blue-600 hover:underline no-underline">
             Daftar
-          </a>
+          </Link>
         </div>
 
         <div className="flex justify-center space-x-4 text-xs text-gray-400 mt-8">
-          <a href="#" className="hover:underline">Ketentuan Penggunaan</a>
+          <a href="#" className="hover:underline no-underline">Ketentuan Penggunaan</a>
           <span>|</span>
-          <a href="#" className="hover:underline">Kebijakan Privasi</a>
+          <a href="#" className="hover:underline no-underline">Kebijakan Privasi</a>
         </div>
       </div>
     </div>

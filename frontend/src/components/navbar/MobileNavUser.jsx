@@ -83,7 +83,7 @@ export default function MobileNavUser() {
         <nav className="flex flex-col py-4 text-sm">
           <NavItem
             icon={<LayoutDashboard className="w-4 h-4" />}
-            to="/account"
+            to="/account-page"
             label="Akun Saya"
             onClick={handleNavClick}
           />

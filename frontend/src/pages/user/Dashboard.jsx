@@ -17,11 +17,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div className="min-h-screen bg-white text-gray-900">
       <WelcomeWithActions />
 
       {/* Estimator Section */}
-      <div className="max-w-4xl mx-auto px-4 pt-6">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <EstimatorWidget onOpenPopup={handleOpenEstimator} />
       </div>
 
@@ -34,7 +34,7 @@ const Dashboard = () => {
       )}
 
       {/* Dashboard Content */}
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12 space-y-6 lg:space-y-8">
         <QuickAccessSection />
         <RecentTransactionCard />
         <ChatSection />

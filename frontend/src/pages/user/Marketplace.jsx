@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getAllProducts } from '../../firebase/productService';
 import SearchBar from '../../components/marketplace/searchBar';
 import FilterBar from '../../components/marketplace/FilterBar';
 import ProductGrid from '../../components/marketplace/ProductGrid';
 import ProductDetailModal from '../../components/marketplace/ProductDetailModal';
 import NavbarBlockFix from '../../components/navbar/NavbarBlockFix';
+import BlockfixSpinner from '../../components/animasi/BlockfixSpinner';
+import ProductCard from '../../components/marketplace/ProductCard';
 
 const Marketplace = () => {
   const [products, setProducts] = useState([]);
@@ -19,19 +20,28 @@ const Marketplace = () => {
     sortBy: 'newest'
   });
 
-  // Fetch products
+  // Fetch products from backend API
   useEffect(() => {
     const loadProducts = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getAllProducts();
-        console.log('Fetched products:', data); // Debug log
+        
+        const response = await fetch('http://localhost:5000/api/products');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('Fetched products from backend:', result); // Debug log
+        
+        // Extract data array from the API response
+        const data = result.data || [];
         setProducts(data);
         setFilteredProducts(data);
       } catch (error) {
         console.error('Failed to fetch products:', error);
-        setError('Failed to load products. Please try again later.');
+        setError('Failed to load products from backend. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -99,6 +109,12 @@ const Marketplace = () => {
     setSelectedProduct(product);
   };
 
+  // Show loading spinner while fetching data
+  if (loading) {
+    return <BlockfixSpinner />;
+  }
+
+  // Show error message if fetch failed
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -133,11 +149,25 @@ const Marketplace = () => {
 
           {/* Product Grid */}
           <div className="flex-1">
-            <ProductGrid
-              products={filteredProducts}
-              loading={loading}
-              onProductClick={handleProductClick}
-            />
+            {/* Display products if available, otherwise show empty state */}
+            {filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {filteredProducts.map((product, index) => (
+                  <ProductCard
+                    key={product.id || index}
+                    product={product}
+                    onClick={handleProductClick}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg">No products available from backend API</p>
+                <p className="text-gray-400 text-sm mt-2">
+                  The backend is returning an empty products array
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

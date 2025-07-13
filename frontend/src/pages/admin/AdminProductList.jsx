@@ -78,135 +78,175 @@ const AdminProductList = () => {
   }
 
   return (
-    <div className="p-4 flex gap-6">
-      {/* Tabel produk */}
-      <div className="flex-1">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xl font-bold">Manajemen Produk</h1>
-          <Link
-            to="/admin/products/add"
-            className="bg-[#7C3AED] text-white px-4 py-2 rounded-xl hover:bg-[#6B21A8] text-sm"
-          >
-            Tambah Produk
-          </Link>
-        </div>
-
-        <div className="overflow-x-auto rounded-lg shadow border dark:border-gray-700">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-100 dark:bg-gray-800 text-left">
-              <tr>
-                <th className="p-3 font-medium">Gambar</th>
-                <th className="p-3 font-medium">Nama</th>
-                <th className="p-3 font-medium">Harga</th>
-                <th className="p-3 font-medium">Kategori</th>
-                <th className="p-3 font-medium">Status</th>
-                <th className="p-3 font-medium">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-            {paginatedProducts.length > 0 ? paginatedProducts.map((product) => (
-              <tr
-                key={product.id}
-                className="border-t hover:bg-gray-50 dark:hover:bg-gray-800"
-              >
-                <td className="p-3">
-                  {product.images?.[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-12 h-12 object-cover rounded"
-                    />
-                  ) : (
-                    <span className="text-xs text-gray-400">Tidak ada gambar</span>
-                  )}
-                </td>
-                <td className="p-3">{product.name}</td>
-                <td className="p-3">
-                  Rp {product.price?.toLocaleString("id-ID")}
-                </td>
-                <td className="p-3">{product.category || "-"}</td>
-                <td className="p-3">{product.status || "-"}</td>
-                <td className="p-3 flex gap-2">
-                  <button
-                    onClick={() => handleInfo(product.id)}
-                    className="inline-flex items-center justify-center px-2 py-1 text-sm border rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <Info className="w-4 h-4 text-blue-500" />
-                  </button>
-                  <Link
-                    to={`/admin/products/edit/${product.id}`}
-                    className="inline-flex items-center justify-center px-2 py-1 text-sm border rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <Pencil className="w-4 h-4 text-[#7C3AED]" />
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(product.id)}
-                    className="inline-flex items-center justify-center px-2 py-1 text-sm text-white bg-red-500 hover:bg-red-600 rounded-xl"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            )) : (
-              <tr>
-                <td colSpan="6" className="p-3 text-center text-gray-500">
-                  Tidak ada produk untuk ditampilkan
-                </td>
-              </tr>
-            )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="mt-4 flex justify-end gap-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setPage(i + 1)}
-                className={`px-3 py-1 rounded-md text-sm border ${page === i + 1 ? 'bg-[#7C3AED] text-white' : 'bg-white text-gray-700'}`}
-              >
-                {i + 1}
-              </button>
-            ))}
+    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
+      <div className="p-6 flex gap-6">
+        {/* Tabel produk */}
+        <div className="flex-1">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-white">Manajemen Produk</h1>
+            <Link
+              to="/admin/products/add"
+              className="bg-gradient-to-r from-[#7C3AED] to-[#4FACFE] text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-lg font-medium"
+            >
+              + Tambah Produk
+            </Link>
           </div>
-        )}
-      </div>
 
-      {/* Detail produk di kanan */}
-      {selectedProduct && (
-        <div className="w-[320px] p-4 bg-white rounded-xl border shadow dark:bg-gray-900 dark:border-gray-700">
-          <h2 className="text-lg font-semibold mb-2">Detail Produk</h2>
-          <img
-            src={selectedProduct.images?.[0]}
-            alt={selectedProduct.name}
-            className="w-full h-40 object-cover rounded mb-3"
-          />
-          <p className="text-sm font-medium">{selectedProduct.name}</p>
-          <p className="text-sm text-gray-500">{selectedProduct.category}</p>
-          <p className="text-sm mt-2">Harga: Rp {selectedProduct.price?.toLocaleString("id-ID")}</p>
-          {selectedProduct.originalPrice && (
-            <p className="text-sm text-gray-400 line-through">Rp {selectedProduct.originalPrice?.toLocaleString("id-ID")}</p>
-          )}
-          {selectedProduct.discountPercent && (
-            <p className="text-sm text-red-500">Diskon {selectedProduct.discountPercent}%</p>
-          )}
-          <p className="text-sm mt-2">Rating: {selectedProduct.rating || 0}</p>
-          <p className="text-sm">Terjual: {selectedProduct.soldCount || 0}</p>
-          <p className="text-sm mt-2">Lokasi: {selectedProduct.location}</p>
-          <p className="text-sm">Estimasi Kirim: {selectedProduct.shippingEstimate}</p>
-          {selectedProduct.badges?.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {selectedProduct.badges.map((badge, i) => (
-                <span key={i} className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full">
-                  {badge}
-                </span>
+          <div className="overflow-x-auto rounded-xl shadow-2xl border border-gray-700 bg-[#1e293b]/50 backdrop-blur-sm">
+            <table className="min-w-full text-sm">
+              <thead className="bg-gradient-to-r from-[#7C3AED]/20 to-[#4FACFE]/20 text-left border-b border-gray-600">
+                <tr>
+                  <th className="p-3 font-medium">Gambar</th>
+                  <th className="p-3 font-medium">Nama</th>
+                  <th className="p-3 font-medium">Harga</th>
+                  <th className="p-3 font-medium">Kategori</th>
+                  <th className="p-3 font-medium">Status</th>
+                  <th className="p-3 font-medium">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700">
+                {paginatedProducts.length > 0 ? paginatedProducts.map((product) => (
+                  <tr
+                    key={product.id}
+                    className="hover:bg-[#7C3AED]/10 transition-colors"
+                  >
+                    <td className="p-4">
+                      {product.images?.[0] ? (
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-14 h-14 object-cover rounded-lg shadow-md"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 bg-gray-700 rounded-lg flex items-center justify-center">
+                          <span className="text-xs text-gray-400">No Image</span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-4 font-medium text-white">{product.name}</td>
+                    <td className="p-4 text-green-400 font-semibold">
+                      Rp {product.price?.toLocaleString("id-ID")}
+                    </td>
+                    <td className="p-4 text-gray-300">{product.category || "-"}</td>
+                    <td className="p-4">
+                      <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">
+                        {product.status || "Active"}
+                      </span>
+                    </td>
+                    <td className="p-4 flex gap-2">
+                      <button
+                        onClick={() => handleInfo(product.id)}
+                        className="inline-flex items-center justify-center p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors"
+                      >
+                        <Info className="w-4 h-4" />
+                      </button>
+                      <Link
+                        to={`/admin/products/edit/${product.id}`}
+                        className="inline-flex items-center justify-center p-2 bg-[#7C3AED]/20 text-[#7C3AED] rounded-lg hover:bg-[#7C3AED]/30 transition-colors"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        className="inline-flex items-center justify-center p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan="6" className="p-8 text-center text-gray-400">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-2">
+                          <span className="text-2xl">📦</span>
+                        </div>
+                        <p>Tidak ada produk untuk ditampilkan</p>
+                        <p className="text-sm text-gray-500">Mulai dengan menambahkan produk pertama Anda</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-6 flex justify-center gap-2">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => setPage(i + 1)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    page === i + 1 
+                      ? 'bg-gradient-to-r from-[#7C3AED] to-[#4FACFE] text-white shadow-lg' 
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {i + 1}
+                </button>
               ))}
             </div>
           )}
         </div>
-      )}
+
+        {/* Detail produk di kanan */}
+        {selectedProduct && (
+          <div className="w-[360px] p-6 bg-gradient-to-br from-[#1e293b] to-[#334155] rounded-xl border border-gray-600 shadow-2xl backdrop-blur-sm">
+            <h2 className="text-xl font-bold mb-4 text-white">Detail Produk</h2>
+            <div className="space-y-4">
+              <img
+                src={selectedProduct.images?.[0]}
+                alt={selectedProduct.name}
+                className="w-full h-48 object-cover rounded-lg shadow-md"
+              />
+              <div className="space-y-2">
+                <h3 className="font-semibold text-white text-lg">{selectedProduct.name}</h3>
+                <p className="text-gray-300 text-sm">{selectedProduct.category}</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-400 font-bold text-lg">
+                    Rp {selectedProduct.price?.toLocaleString("id-ID")}
+                  </span>
+                  {selectedProduct.originalPrice && (
+                    <span className="text-gray-400 line-through text-sm">
+                      Rp {selectedProduct.originalPrice?.toLocaleString("id-ID")}
+                    </span>
+                  )}
+                </div>
+                {selectedProduct.discountPercent && (
+                  <span className="inline-block px-2 py-1 bg-red-500/20 text-red-400 rounded-full text-xs">
+                    Diskon {selectedProduct.discountPercent}%
+                  </span>
+                )}
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="text-center p-2 bg-gray-700/50 rounded-lg">
+                    <div className="text-yellow-400 font-semibold">⭐ {selectedProduct.rating || 0}</div>
+                    <div className="text-xs text-gray-400">Rating</div>
+                  </div>
+                  <div className="text-center p-2 bg-gray-700/50 rounded-lg">
+                    <div className="text-blue-400 font-semibold">{selectedProduct.soldCount || 0}</div>
+                    <div className="text-xs text-gray-400">Terjual</div>
+                  </div>
+                </div>
+                <div className="pt-2 space-y-1">
+                  <p className="text-sm text-gray-300">📍 {selectedProduct.location}</p>
+                  <p className="text-sm text-gray-300">🚚 {selectedProduct.shippingEstimate}</p>
+                </div>
+                {selectedProduct.badges?.length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-2">
+                    {selectedProduct.badges.map((badge, i) => (
+                      <span key={i} className="text-xs px-2 py-1 bg-[#7C3AED]/20 text-[#7C3AED] rounded-full">
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

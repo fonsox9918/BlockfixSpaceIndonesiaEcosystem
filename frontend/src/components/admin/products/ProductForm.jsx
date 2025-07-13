@@ -184,79 +184,89 @@ const ProductForm = ({ mode = "add" }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-3xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            {mode === "edit" ? "Edit Produk" : "Tambah Produk Baru"}
+          </h1>
+          <p className="text-gray-300">
+            {mode === "edit" ? "Perbarui informasi produk" : "Lengkapi form untuk menambahkan produk baru"}
+          </p>
+        </div>
+        
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 bg-gradient-to-br from-[#1e293b] to-[#334155] p-8 rounded-2xl border border-gray-600 shadow-2xl backdrop-blur-sm">
       {/* Basic Information */}
       <div className="space-y-4">
         <div>
-          <label className="block mb-1 font-medium">Nama Produk *</label>
+          <label className="block mb-2 font-medium text-white">Nama Produk *</label>
           <input
             type="text"
             {...register("name")}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.name ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.name ? "border-red-500" : "border-gray-600"
             }`}
-            placeholder="Nama produk"
+            placeholder="Masukkan nama produk"
           />
           {errors.name && (
-            <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block mb-1 font-medium">Harga *</label>
+            <label className="block mb-2 font-medium text-white">Harga *</label>
             <input
               type="number"
               {...register("price", { valueAsNumber: true })}
-              className={`w-full border rounded px-3 py-2 ${
-                errors.price ? "border-red-500" : "border-gray-300"
+              className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+                errors.price ? "border-red-500" : "border-gray-600"
               }`}
-              placeholder="Harga produk"
+              placeholder="Masukkan harga produk"
             />
             {errors.price && (
-              <p className="text-red-500 text-sm mt-1">{errors.price.message}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.price.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block mb-1 font-medium">Harga Asli</label>
+            <label className="block mb-2 font-medium text-white">Harga Asli</label>
             <input
               type="number"
               {...register("originalPrice", { valueAsNumber: true })}
-              className={`w-full border rounded px-3 py-2 ${
-                errors.originalPrice ? "border-red-500" : "border-gray-300"
+              className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+                errors.originalPrice ? "border-red-500" : "border-gray-600"
               }`}
               placeholder="Harga sebelum diskon"
             />
             {errors.originalPrice && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-400 text-sm mt-1">
                 {errors.originalPrice.message}
               </p>
             )}
           </div>
         </div>
 
-        <div>
-          <label className="block mb-1 font-medium">Diskon (%)</label>
-          <div className="space-y-2">
+        <div className="bg-gray-700/30 p-6 rounded-xl border border-gray-600">
+          <label className="block mb-3 font-medium text-white">Diskon (%)</label>
+          <div className="space-y-4">
             <input
               type="range"
               {...register("discountPercent", { valueAsNumber: true })}
               min="0"
               max="100"
               step="1"
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer slider accent-[#7C3AED]"
             />
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>Diskon: {discountPercent || 0}%</span>
-              <span>
-                Harga Akhir: Rp{" "}
-                {calculatedPrice.toLocaleString("id-ID")}
+            <div className="flex justify-between text-sm">
+              <span className="text-[#7C3AED] font-semibold">Diskon: {discountPercent || 0}%</span>
+              <span className="text-green-400 font-semibold">
+                Harga Akhir: Rp {calculatedPrice.toLocaleString("id-ID")}
               </span>
             </div>
           </div>
           {errors.discountPercent && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-400 text-sm mt-1">
               {errors.discountPercent.message}
             </p>
           )}
@@ -264,150 +274,150 @@ const ProductForm = ({ mode = "add" }) => {
       </div>
 
       {/* Category and Type */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block mb-1 font-medium">Kategori *</label>
+          <label className="block mb-2 font-medium text-white">Kategori *</label>
           <select
             {...register("category")}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.category ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.category ? "border-red-500" : "border-gray-600"
             }`}
           >
-            <option value="">Pilih kategori</option>
+            <option value="" className="bg-gray-800">Pilih kategori</option>
             {CATEGORY_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
+              <option key={opt.value} value={opt.value} className="bg-gray-800">
                 {opt.label}
               </option>
             ))}
           </select>
           {errors.category && (
-            <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.category.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Satuan *</label>
+          <label className="block mb-2 font-medium text-white">Satuan *</label>
           <select
             {...register("unit")}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.unit ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.unit ? "border-red-500" : "border-gray-600"
             }`}
           >
-            <option value="">Pilih satuan</option>
+            <option value="" className="bg-gray-800">Pilih satuan</option>
             {UNIT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
+              <option key={opt.value} value={opt.value} className="bg-gray-800">
                 {opt.label}
               </option>
             ))}
           </select>
           {errors.unit && (
-            <p className="text-red-500 text-sm mt-1">{errors.unit.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.unit.message}</p>
           )}
         </div>
       </div>
 
       {/* Description */}
       <div>
-        <label className="block mb-1 font-medium">Deskripsi</label>
+        <label className="block mb-2 font-medium text-white">Deskripsi</label>
         <textarea
           {...register("description")}
           rows={4}
-          className={`w-full border rounded px-3 py-2 ${
-            errors.description ? "border-red-500" : "border-gray-300"
+          className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors resize-none ${
+            errors.description ? "border-red-500" : "border-gray-600"
           }`}
-          placeholder="Deskripsi produk"
+          placeholder="Masukkan deskripsi produk"
         />
         {errors.description && (
-          <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+          <p className="text-red-400 text-sm mt-1">{errors.description.message}</p>
         )}
       </div>
 
       {/* Stock and Rating */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-          <label className="block mb-1 font-medium">Stok</label>
+          <label className="block mb-2 font-medium text-white">Stok</label>
           <input
             type="number"
             {...register("stock", { valueAsNumber: true })}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.stock ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.stock ? "border-red-500" : "border-gray-600"
             }`}
             placeholder="Jumlah stok"
           />
           {errors.stock && (
-            <p className="text-red-500 text-sm mt-1">{errors.stock.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.stock.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Rating</label>
+          <label className="block mb-2 font-medium text-white">Rating</label>
           <select
             {...register("rating", { valueAsNumber: true })}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.rating ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.rating ? "border-red-500" : "border-gray-600"
             }`}
           >
             {RATING_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
+              <option key={opt.value} value={opt.value} className="bg-gray-800">
                 {opt.label} ⭐
               </option>
             ))}
           </select>
           {errors.rating && (
-            <p className="text-red-500 text-sm mt-1">{errors.rating.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.rating.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Terjual</label>
+          <label className="block mb-2 font-medium text-white">Terjual</label>
           <input
             type="number"
             {...register("soldCount", { valueAsNumber: true })}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.soldCount ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.soldCount ? "border-red-500" : "border-gray-600"
             }`}
             placeholder="Jumlah terjual"
           />
           {errors.soldCount && (
-            <p className="text-red-500 text-sm mt-1">{errors.soldCount.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.soldCount.message}</p>
           )}
         </div>
       </div>
 
       {/* Location and Shipping */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block mb-1 font-medium">Lokasi</label>
+          <label className="block mb-2 font-medium text-white">Lokasi</label>
           <select
             {...register("location")}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.location ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.location ? "border-red-500" : "border-gray-600"
             }`}
           >
-            <option value="">Pilih lokasi</option>
+            <option value="" className="bg-gray-800">Pilih lokasi</option>
             {LOCATION_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
+              <option key={opt.value} value={opt.value} className="bg-gray-800">
                 {opt.label}
               </option>
             ))}
           </select>
           {errors.location && (
-            <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.location.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Estimasi Pengiriman</label>
+          <label className="block mb-2 font-medium text-white">Estimasi Pengiriman</label>
           <input
             type="text"
             {...register("shippingEstimate")}
-            className={`w-full border rounded px-3 py-2 ${
-              errors.shippingEstimate ? "border-red-500" : "border-gray-300"
+            className={`w-full bg-gray-700/50 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] transition-colors ${
+              errors.shippingEstimate ? "border-red-500" : "border-gray-600"
             }`}
             placeholder="Contoh: 1-3 hari kerja"
           />
           {errors.shippingEstimate && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-400 text-sm mt-1">
               {errors.shippingEstimate.message}
             </p>
           )}
@@ -416,20 +426,20 @@ const ProductForm = ({ mode = "add" }) => {
 
       {/* Badges */}
       <div>
-        <label className="block mb-1 font-medium">Badge Produk</label>
+        <label className="block mb-3 font-medium text-white">Badge Produk</label>
         <Controller
           control={control}
           name="badges"
           render={({ field }) => (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {BADGE_OPTIONS.map((badge) => (
                 <label
                   key={badge.value}
-                  className={`inline-flex items-center px-3 py-1.5 rounded-full cursor-pointer text-sm
+                  className={`inline-flex items-center px-4 py-2 rounded-xl cursor-pointer text-sm font-medium transition-colors
                     ${
                       field.value?.includes(badge.value)
-                        ? "bg-blue-100 text-blue-800 border-blue-300"
-                        : "bg-gray-100 text-gray-700 border-gray-200"
+                        ? "bg-[#7C3AED]/20 text-[#7C3AED] border-[#7C3AED]/50"
+                        : "bg-gray-700/50 text-gray-300 border-gray-600 hover:bg-gray-600/50"
                     } border`}
                 >
                   <input
@@ -454,16 +464,16 @@ const ProductForm = ({ mode = "add" }) => {
           )}
         />
         {errors.badges && (
-          <p className="text-red-500 text-sm mt-1">{errors.badges.message}</p>
+          <p className="text-red-400 text-sm mt-1">{errors.badges.message}</p>
         )}
       </div>
 
       {/* Image Upload */}
       <div className="space-y-4">
-        <label className="block mb-1 font-medium">Gambar Produk *</label>
+        <label className="block mb-3 font-medium text-white">Gambar Produk *</label>
         <label
           htmlFor="image-upload"
-          className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors"
+          className="border-2 border-dashed border-gray-600 rounded-xl p-8 text-center cursor-pointer hover:border-[#7C3AED] transition-colors bg-gray-700/20"
         >
           <input
             id="image-upload"
@@ -473,14 +483,13 @@ const ProductForm = ({ mode = "add" }) => {
             className="hidden"
             onChange={onFileChange}
           />
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Plus className="mx-auto h-12 w-12 text-gray-400" />
-            <div className="text-gray-600">
-              <span className="font-medium">Klik untuk upload</span> atau drag and
-              drop
+            <div className="text-gray-300">
+              <span className="font-medium text-white">Klik untuk upload</span> atau drag and drop
             </div>
-            <p className="text-xs text-gray-500">
-              Format: JPG, JPEG, PNG, WEBP
+            <p className="text-xs text-gray-400">
+              Format: JPG, JPEG, PNG, WEBP (Max 5MB per file)
             </p>
           </div>
         </label>
@@ -492,38 +501,43 @@ const ProductForm = ({ mode = "add" }) => {
                 <img
                   src={src}
                   alt={`Preview ${idx + 1}`}
-                  className="w-full h-32 object-cover rounded-lg"
+                  className="w-full h-32 object-cover rounded-lg border border-gray-600"
                 />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xs">Preview {idx + 1}</span>
+                </div>
               </div>
             ))}
           </div>
         )}
         {errors.images && (
-          <p className="text-red-500 text-sm">{errors.images.message}</p>
+          <p className="text-red-400 text-sm">{errors.images.message}</p>
         )}
       </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? (
-            <span className="flex items-center gap-2">
-              <Loader2 className="animate-spin h-5 w-5" />
-              Menyimpan...
-            </span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <Upload className="h-5 w-5" />
-              {mode === "edit" ? "Perbarui Produk" : "Tambah Produk"}
-            </span>
-          )}
-        </button>
+          {/* Submit Button */}
+          <div className="flex justify-end pt-4">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-[#7C3AED] to-[#4FACFE] text-white px-8 py-4 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg transition-opacity"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-3">
+                  <Loader2 className="animate-spin h-5 w-5" />
+                  Menyimpan...
+                </span>
+              ) : (
+                <span className="flex items-center gap-3">
+                  <Upload className="h-5 w-5" />
+                  {mode === "edit" ? "Perbarui Produk" : "Tambah Produk"}
+                </span>
+              )}
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   );
 };
 
