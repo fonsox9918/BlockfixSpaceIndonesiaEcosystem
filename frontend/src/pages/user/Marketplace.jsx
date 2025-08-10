@@ -27,7 +27,7 @@ const Marketplace = () => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('http://localhost:5000/api/products');
+        const response = await fetch('http://localhost:3000/api/products');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -134,7 +134,7 @@ const Marketplace = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavbarBlockFix />
-      <div className="max-w-7xl mx-auto px-4 py-8 pt-20">
+      <div className="max-w-7xl mx-auto px-4 py-8 pt-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Marketplace</h1>
@@ -151,7 +151,7 @@ const Marketplace = () => {
           <div className="flex-1">
             {/* Display products if available, otherwise show empty state */}
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredProducts.map((product, index) => (
                   <ProductCard
                     key={product.id || index}

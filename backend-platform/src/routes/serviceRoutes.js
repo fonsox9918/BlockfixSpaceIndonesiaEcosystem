@@ -1,5 +1,6 @@
 const express = require('express');
 const { db, admin } = require('../config/firebaseConfig');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -118,8 +119,8 @@ const sanitizeService = (data, isUpdate = false) => {
   return sanitized;
 };
 
-// POST: Tambah layanan
-router.post('/services', async (req, res) => {
+// POST: Tambah layanan (Admin only)
+router.post('/services', authenticateToken, requireAdmin, async (req, res) => {
   try {
     // Validasi data
     const validation = validateService(req.body);
@@ -300,8 +301,8 @@ router.get('/services/:id', async (req, res) => {
   }
 });
 
-// PUT: Update layanan
-router.put('/services/:id', async (req, res) => {
+// PUT: Update layanan (Admin only)
+router.put('/services/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -358,8 +359,8 @@ router.put('/services/:id', async (req, res) => {
   }
 });
 
-// DELETE: Hapus layanan
-router.delete('/services/:id', async (req, res) => {
+// DELETE: Hapus layanan (Admin only)
+router.delete('/services/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 

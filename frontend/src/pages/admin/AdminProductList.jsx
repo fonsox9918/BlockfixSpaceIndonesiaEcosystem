@@ -3,6 +3,8 @@ import { getAllProducts, deleteProduct } from "@/services/productService";
 import { Pencil, Trash2, Loader2, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { storage } from "../../firebase/firebaseConfig";
+import { ref, getDownloadURL } from "firebase/storage";
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
@@ -111,17 +113,27 @@ const AdminProductList = () => {
                     className="hover:bg-[#7C3AED]/10 transition-colors"
                   >
                     <td className="p-4">
-                      {product.images?.[0] ? (
+                      {product.images?.[0] && 
+                       !product.images[0].includes('example.com') && 
+                       !product.images[0].includes('localhost') &&
+                       product.images[0] !== '' ? (
                         <img
                           src={product.images[0]}
                           alt={product.name}
                           className="w-14 h-14 object-cover rounded-lg shadow-md"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
                         />
-                      ) : (
-                        <div className="w-14 h-14 bg-gray-700 rounded-lg flex items-center justify-center">
-                          <span className="text-xs text-gray-400">No Image</span>
-                        </div>
-                      )}
+                      ) : null}
+                      <div className="w-14 h-14 bg-gray-700 rounded-lg flex items-center justify-center" 
+                           style={{ display: product.images?.[0] && 
+                                              !product.images[0].includes('example.com') && 
+                                              !product.images[0].includes('localhost') &&
+                                              product.images[0] !== '' ? 'none' : 'flex' }}>
+                        <span className="text-xs text-gray-400">No Image</span>
+                      </div>
                     </td>
                     <td className="p-4 font-medium text-white">{product.name}</td>
                     <td className="p-4 text-green-400 font-semibold">
@@ -196,11 +208,34 @@ const AdminProductList = () => {
           <div className="w-[360px] p-6 bg-gradient-to-br from-[#1e293b] to-[#334155] rounded-xl border border-gray-600 shadow-2xl backdrop-blur-sm">
             <h2 className="text-xl font-bold mb-4 text-white">Detail Produk</h2>
             <div className="space-y-4">
-              <img
-                src={selectedProduct.images?.[0]}
-                alt={selectedProduct.name}
-                className="w-full h-48 object-cover rounded-lg shadow-md"
-              />
+              {selectedProduct.images?.[0] && 
+               !selectedProduct.images[0].includes('example.com') && 
+               !selectedProduct.images[0].includes('localhost') &&
+               selectedProduct.images[0] !== '' ? (
+                <img
+                  src={selectedProduct.images[0]}
+                  alt={selectedProduct.name}
+                  className="w-full h-48 object-cover rounded-lg shadow-md"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className="w-full h-48 bg-gray-700 rounded-lg flex items-center justify-center" 
+                   style={{ display: selectedProduct.images?.[0] && 
+                                      !selectedProduct.images[0].includes('example.com') && 
+                                      !selectedProduct.images[0].includes('localhost') &&
+                                      selectedProduct.images[0] !== '' ? 'none' : 'flex' }}>
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-2 bg-gray-600 rounded-lg flex items-center justify-center">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-gray-400">No Image Available</p>
+                </div>
+              </div>
               <div className="space-y-2">
                 <h3 className="font-semibold text-white text-lg">{selectedProduct.name}</h3>
                 <p className="text-gray-300 text-sm">{selectedProduct.category}</p>

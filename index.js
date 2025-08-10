@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const firestore = require('./firestore-config');
 
 // Initialize Express app
 const app = express();
@@ -30,24 +29,13 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Test Firestore connection route
-app.get('/test-firestore', async (req, res) => {
-  try {
-    // Test Firestore connection by attempting to get a collection reference
-    const testCollection = firestore.collection('test');
-    res.json({
-      message: 'Firestore connection successful',
-      status: 'connected',
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: 'Firestore connection failed',
-      error: error.message,
-      status: 'error',
-      timestamp: new Date().toISOString()
-    });
-  }
+// Test route for basic functionality
+app.get('/test', (req, res) => {
+  res.json({
+    message: 'Basic test endpoint working',
+    status: 'success',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // API routes placeholder

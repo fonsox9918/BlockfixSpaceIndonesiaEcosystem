@@ -4,6 +4,8 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 import { auth, db } from "../../firebase/firebaseConfig";
 import {
@@ -66,38 +68,61 @@ const LoginEmail = () => {
     setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: user.uid,
-          name: user.displayName || "",
-          email: user.email,
-          photoURL: user.photoURL || "",
-          role: "user",
-          isActive: true,
-          address: "",
-          phoneNumber: "",
-          createdAt: serverTimestamp(),
-        });
-        navigate("/dashboard");
-      } else {
-        const userData = userSnap.data();
-        if (userData.role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/dashboard");
+      
+      // Coba popup terlebih dahulu
+      try {
+        const result = await signInWithPopup(auth, provider);
+        await processGoogleUser(result.user);
+      } catch (popupError) {
+        console.log("Popup blocked, trying redirect:", popupError);
+        
+        // Jika popup diblokir, gunakan redirect
+        if (popupError.code === 'auth/popup-blocked' || 
+            popupError.code === 'auth/popup-closed-by-user' ||
+            /Safari/.test(navigator.userAgent)) {
+          await signInWithRedirect(auth, provider);
+          return; // Redirect akan handle sisanya
         }
+        throw popupError;
       }
     } catch (err) {
-      console.error(err);
-      setError("Gagal masuk dengan Google.");
+      console.error("Google login error:", err);
+      setError("Gagal masuk dengan Google: " + err.message);
     }
     setLoading(false);
+  };
+
+  const processGoogleUser = async (user) => {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      // Create new user with default role
+      await setDoc(userRef, {
+        uid: user.uid,
+        name: user.displayName || "",
+        email: user.email,
+        photoURL: user.photoURL || "",
+        role: "user", // Default role
+        isActive: true,
+        address: "",
+        phoneNumber: "",
+        createdAt: serverTimestamp(),
+        registerMethod: "google"
+      });
+      console.log("New user created in Firestore:", user.uid);
+      navigate("/dashboard");
+    } else {
+      const userData = userSnap.data();
+      console.log("Existing user found:", userData);
+      
+      // Navigate based on role
+      if (userData.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    }
   };
 
   return (

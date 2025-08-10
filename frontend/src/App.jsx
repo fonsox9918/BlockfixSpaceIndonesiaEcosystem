@@ -1,6 +1,7 @@
 // src/App.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import './index.css';
 
 import NavbarBlockFix from "./components/navbar/NavbarBlockFix";
@@ -19,6 +20,8 @@ import ProjectTrackerPage from './pages/user/ProjectTrackerPage';
 import AccountPage from './pages/user/account/AccountPage';  
 import RoomDesign from "./pages/user/RoomDesign";
 import Marketplace from "./pages/user/Marketplace";
+import CartPage from "./pages/user/CartPage";
+import CheckoutPage from "./pages/user/CheckoutPage";
 
 // Auth Pages
 import Auth from './pages/auth/Auth';
@@ -110,6 +113,22 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute allowedRoles={['user']}>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute allowedRoles={['user']}>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Fallback */}
           <Route path="/not-authorized" element={<NotAuthorized />} />
@@ -131,6 +150,12 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <AuthGate />
+        <Toaster 
+          position="top-right"
+          richColors
+          closeButton
+          duration={4000}
+        />
       </AuthProvider>
     </BrowserRouter>
   );

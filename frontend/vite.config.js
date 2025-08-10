@@ -18,6 +18,10 @@ export default defineConfig({
     }
   },
   server: {
-    host: true // 👈 ini yang bikin bisa diakses dari HP / perangkat lain
+    host: true, // 👈 ini yang bikin bisa diakses dari HP / perangkat lain
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+      'Cross-Origin-Embedder-Policy': 'unsafe-none'
+    }
   }
 })

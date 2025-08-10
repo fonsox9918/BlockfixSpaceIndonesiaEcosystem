@@ -78,7 +78,6 @@ export default function MobileNavUser() {
             <div className="text-sm text-zinc-500">{currentUser?.email}</div>
           </div>
         </div>
-
         {/* Menu Items */}
         <nav className="flex flex-col py-4 text-sm">
           <NavItem
@@ -93,12 +92,7 @@ export default function MobileNavUser() {
             label="Pesan"
             onClick={handleNavClick}
           />
-          <NavItem
-            icon={<LayoutDashboard className="w-4 h-4" />}
-            to="/dashboard"
-            label="Dashboard"
-            onClick={handleNavClick}
-          />
+
           <NavItem
             icon={<Folder className="w-4 h-4" />}
             to="/projects"
@@ -111,25 +105,18 @@ export default function MobileNavUser() {
             label="Pengaturan"
             onClick={handleNavClick}
           />
-
-          <div className="border-t my-4" />
-
-          <NavItem
-            icon={<Home className="w-4 h-4" />}
-            to="/"
-            label="Beranda"
-            onClick={handleNavClick}
-          />
-          <NavItem
-            icon={<Info className="w-4 h-4" />}
-            to="/about"
-            label="Tentang"
-            onClick={handleNavClick}
-          />
           <NavItem
             icon={<Star className="w-4 h-4" />}
             to="/layanan"
             label="Fitur"
+            onClick={handleNavClick}
+          />
+          <div className="border-t my-4" />
+
+          <NavItem
+            icon={<Info className="w-4 h-4" />}
+            to="/about"
+            label="Tentang"
             onClick={handleNavClick}
           />
 

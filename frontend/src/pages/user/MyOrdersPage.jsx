@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../context/AuthContext";
+import { orderService } from "../../services/orderService";
+import { toast } from 'sonner';
 import { Package, Clock, CheckCircle, XCircle, Calendar, MapPin, DollarSign } from "lucide-react";
+import BlockfixSpinner from '../../components/animasi/BlockfixSpinner';
 
 const dummyOrders = [
   {
@@ -82,48 +85,89 @@ const getStatusColor = (statusColor) => {
 };
 
 const MyOrdersPage = () => {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    // Simulate API call
-    const fetchOrders = async () => {
-      setLoading(true);
-      // In real implementation, fetch from API with user authentication
-      // const response = await fetch(`/api/orders?userId=${currentUser.uid}`);
-      // const data = await response.json();
-      
-      // For now, use dummy data
-      setTimeout(() => {
-        setOrders(dummyOrders);
-        setLoading(false);
-      }, 1000);
-    };
-
-    if (currentUser) {
+    if (user) {
       fetchOrders();
-    } else {
+    }
+  }, [user]);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await orderService.getOrders();
+      if (response.success) {
+        setOrders(response.data.orders || []);
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      toast.error('Gagal memuat pesanan');
+      // Fallback to dummy data for demo
       setOrders(dummyOrders);
+    } finally {
       setLoading(false);
     }
-  }, [currentUser]);
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const response = await orderService.cancelOrder(orderId);
+      if (response.success) {
+        toast.success('Pesanan berhasil dibatalkan');
+        await fetchOrders(); // Refresh orders
+      }
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+      toast.error('Gagal membatalkan pesanan');
+    }
+  };
 
   const filteredOrders = orders.filter(order => {
     if (filter === "all") return true;
     return order.status.toLowerCase().includes(filter.toLowerCase());
   });
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(amount);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getStatusColorFromStatus = (status) => {
+    switch (status) {
+      case "Menunggu Konfirmasi":
+        return "yellow";
+      case "Dikonfirmasi":
+        return "blue";
+      case "Diproses":
+        return "blue";
+      case "Dikirim":
+        return "blue";
+      case "Selesai":
+        return "green";
+      case "Dibatalkan":
+        return "red";
+      default:
+        return "gray";
+    }
+  };
+
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7C3AED] mx-auto mb-4"></div>
-          <p className="text-gray-600">Memuat pesanan...</p>
-        </div>
-      </div>
-    );
+    return <BlockfixSpinner />;
   }
 
   return (
@@ -140,8 +184,9 @@ const MyOrdersPage = () => {
           {[
             { key: "all", label: "Semua", count: orders.length },
             { key: "menunggu", label: "Menunggu", count: orders.filter(o => o.status.includes("Menunggu")).length },
-            { key: "proses", label: "Diproses", count: orders.filter(o => o.status.includes("Diproses")).length },
-            { key: "selesai", label: "Selesai", count: orders.filter(o => o.status.includes("Selesai")).length }
+            { key: "konfirmasi", label: "Dikonfirmasi", count: orders.filter(o => o.status.includes("Dikonfirmasi")).length },
+            { key: "selesai", label: "Selesai", count: orders.filter(o => o.status.includes("Selesai")).length },
+            { key: "dibatalkan", label: "Dibatalkan", count: orders.filter(o => o.status.includes("Dibatalkan")).length }
           ].map(tab => (
             <button
               key={tab.key}
@@ -172,25 +217,27 @@ const MyOrdersPage = () => {
         ) : (
           <div className="space-y-6 lg:space-y-8">
             {filteredOrders.map((order) => (
-              <div key={order.id} className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6 lg:p-8 hover:shadow-xl transition-shadow">
+              <div key={order.orderId || order.id} className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6 lg:p-8 hover:shadow-xl transition-shadow">
                 {/* Order Header */}
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 lg:mb-8">
                   <div className="flex items-center gap-4 mb-4 lg:mb-0">
-                    <div className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${getStatusColor(order.statusColor)}`}>
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${getStatusColor(getStatusColorFromStatus(order.status))}`}>
                       {getStatusIcon(order.status)}
                       {order.status}
                     </div>
-                    <span className="text-gray-500 text-sm font-mono">#{order.id}</span>
+                    <span className="text-gray-500 text-sm font-mono">#{order.orderId || order.id}</span>
                   </div>
                   <div className="flex items-center gap-6 text-sm text-gray-600">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      {new Date(order.date).toLocaleDateString('id-ID')}
+                      {formatDate(order.createdAt || order.date)}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      {order.location}
-                    </div>
+                    {order.shippingAddress && (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        {order.shippingAddress.city}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -199,33 +246,32 @@ const MyOrdersPage = () => {
                   {/* Order Details */}
                   <div className="lg:col-span-2 space-y-6">
                     <div>
-                      <h3 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-3">{order.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{order.description}</p>
+                      <h3 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-3">
+                        Pesanan #{order.orderId || order.id}
+                      </h3>
+                      {order.shippingAddress && (
+                        <div className="text-gray-600 leading-relaxed">
+                          <p><strong>Penerima:</strong> {order.shippingAddress.fullName}</p>
+                          <p><strong>Alamat:</strong> {order.shippingAddress.address}, {order.shippingAddress.city} {order.shippingAddress.postalCode}</p>
+                          <p><strong>Telepon:</strong> {order.shippingAddress.phone}</p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Items */}
                     <div className="space-y-3">
-                      <h4 className="font-semibold text-gray-900 text-lg">Item Pesanan:</h4>
-                      {order.items.map((item, idx) => (
+                      <h4 className="font-semibold text-gray-900 text-lg">Item Pesanan ({order.totalItems || order.items?.length} item):</h4>
+                      {(order.items || []).map((item, idx) => (
                         <div key={idx} className="flex justify-between items-center py-3 px-4 bg-gray-50 rounded-lg border border-gray-100">
-                          <span className="text-gray-900 font-medium">{item.name}</span>
-                          <span className="text-gray-600 text-sm">{item.quantity} {item.unit}</span>
+                          <div className="flex-1">
+                            <span className="text-gray-900 font-medium">{item.productName || item.name}</span>
+                            {item.productPrice && (
+                              <p className="text-sm text-gray-600">{formatCurrency(item.productPrice)}</p>
+                            )}
+                          </div>
+                          <span className="text-gray-600 text-sm">{item.quantity} pcs</span>
                         </div>
                       ))}
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700 font-medium">Progress Pesanan</span>
-                        <span className="text-[#7C3AED] font-bold">{order.progress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div 
-                          className="bg-gradient-to-r from-[#7C3AED] to-[#4FACFE] h-3 rounded-full transition-all duration-500 shadow-sm"
-                          style={{ width: `${order.progress}%` }}
-                        ></div>
-                      </div>
                     </div>
                   </div>
 
@@ -237,7 +283,7 @@ const MyOrdersPage = () => {
                         <span className="font-semibold text-gray-900">Total Pembayaran</span>
                       </div>
                       <p className="text-2xl lg:text-3xl font-bold text-green-600">
-                        Rp {order.price.toLocaleString('id-ID')}
+                        {formatCurrency(order.totalPrice || order.price)}
                       </p>
                     </div>
 
@@ -245,7 +291,15 @@ const MyOrdersPage = () => {
                       <button className="w-full bg-gradient-to-r from-[#7C3AED] to-[#4FACFE] text-white py-4 rounded-xl hover:opacity-90 transition-opacity font-semibold shadow-lg">
                         Lihat Detail
                       </button>
-                      {order.status !== "Selesai" && (
+                      {(order.status === "Menunggu Konfirmasi" || order.status === "Dikonfirmasi") && (
+                        <button 
+                          onClick={() => handleCancelOrder(order.orderId || order.id)}
+                          className="w-full bg-red-100 text-red-700 py-4 rounded-xl hover:bg-red-200 transition-colors font-medium border border-red-200"
+                        >
+                          Batalkan Pesanan
+                        </button>
+                      )}
+                      {order.status !== "Selesai" && order.status !== "Dibatalkan" && (
                         <button className="w-full bg-gray-100 text-gray-700 py-4 rounded-xl hover:bg-gray-200 transition-colors font-medium border border-gray-200">
                           Hubungi Support
                         </button>

@@ -1,5 +1,6 @@
 const express = require('express');
 const { db, admin } = require('../config/firebaseConfig');
+const { authenticateToken, requireAdmin, requireUser } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -206,8 +207,8 @@ const sanitizeProduct = (data, isUpdate = false) => {
   return sanitized;
 };
 
-// POST: Tambah produk
-router.post('/products', async (req, res) => {
+// POST: Tambah produk (Admin only)
+router.post('/products', authenticateToken, requireAdmin, async (req, res) => {
   try {
     // Validasi data
     const validation = validateProduct(req.body);
@@ -398,8 +399,8 @@ router.get('/products/:id', async (req, res) => {
   }
 });
 
-// PUT: Update produk
-router.put('/products/:id', async (req, res) => {
+// PUT: Update produk (Admin only)
+router.put('/products/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -447,8 +448,8 @@ router.put('/products/:id', async (req, res) => {
   }
 });
 
-// DELETE: Hapus produk
-router.delete('/products/:id', async (req, res) => {
+// DELETE: Hapus produk (Admin only)
+router.delete('/products/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
