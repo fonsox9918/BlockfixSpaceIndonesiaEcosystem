@@ -1,7 +1,27 @@
-name: Deep Project Audit
-on: [workflow_dispatch, push]
+name: Project Audit (Safe)
+on: [push, workflow_dispatch]
 
 jobs:
+  repo_overview:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repo summary
+        run: |
+          echo "== FILE LIST ==" > audit-repo-files.txt
+          find . -type f | sort >> audit-repo-files.txt
+          echo "== DIR TREE (3 levels) ==" > audit-repo-tree.txt
+          find . -maxdepth 3 -type d | sort >> audit-repo-tree.txt
+          git log --oneline --decorate --graph -n 50 > audit-repo-log.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repo-overview
+          path: |
+            audit-repo-files.txt
+            audit-repo-tree.txt
+            audit-repo-log.txt
+
   backend_platform:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -10,23 +30,25 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm', cache-dependency-path: 'backend-platform/package-lock.json' }
-      - run: npm ci || npm i
-      - run: node -v && npm -v > ../audit-node-env.txt
-      - name: List files & deps
+      - name: Install deps
+        run: npm ci || npm i
+      - name: Env & deps info
         run: |
+          node -v && npm -v > ../audit-node-env.txt
           npm pkg get name version > ../audit-node-pkg.json
-          git ls-files > ../audit-node-files.txt
           npx depcheck > ../audit-node-depcheck.txt || true
-      - name: Lint & build
+      - name: Lint (best effort)
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx > ../audit-node-eslint.txt 2>&1 || true
+      - name: Build (capture log, never fail job)
+        run: npm run build > ../audit-node-build.txt 2>&1 || true
+      - name: Endpoint map (best effort)
         run: |
-          npx eslint . --ext .js,.jsx,.ts,.tsx > ../audit-node-eslint.txt || true
-          npm run build > ../audit-node-build.txt 2>&1 || true
-      - name: Endpoints map
-        run: |
-          npm i -D express-list-endpoints
-          node -e "const l=require('express-list-endpoints');const app=require('./app');console.log(JSON.stringify(l(app),null,2));" > ../audit-node-endpoints.json || true
+          npm i -D express-list-endpoints || true
+          node -e "try{const l=require('express-list-endpoints');const app=require('./app');console.log(JSON.stringify(l(app),null,2));}catch(e){console.error(e);}" > ../audit-node-endpoints.json 2>&1 || true
       - uses: actions/upload-artifact@v4
-        with: { name: backend-platform-audit, path: ../audit-node-*, if-no-files-found: ignore }
+        with:
+          name: backend-platform-audit
+          path: ../audit-node-*
 
   backend_ai:
     runs-on: ubuntu-latest
@@ -36,17 +58,23 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt || true
-      - run: |
+      - name: Setup venv & install
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+          pip install ruff bandit pip-audit || true
+      - name: Py audits
+        run: |
           source .venv/bin/activate
           python --version > ../audit-py-env.txt
-          pip list --outdated > ../audit-py-outdated.txt || true
-          pip install ruff bandit pip-audit || true
-          ruff . --output-format=github > ../audit-py-ruff.txt || true
-          bandit -r . > ../audit-py-bandit.txt || true
-          pip-audit > ../audit-py-audit.txt || true
+          ruff . --output-format=github > ../audit-py-ruff.txt 2>&1 || true
+          bandit -r . > ../audit-py-bandit.txt 2>&1 || true
+          pip-audit > ../audit-py-audit.txt 2>&1 || true
       - uses: actions/upload-artifact@v4
-        with: { name: backend-ai-audit, path: ../audit-py-*, if-no-files-found: ignore }
+        with:
+          name: backend-ai-audit
+          path: ../audit-py-*
 
   frontend:
     runs-on: ubuntu-latest
@@ -56,33 +84,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm', cache-dependency-path: 'frontend/package-lock.json' }
-      - run: npm ci || npm i
-      - name: Build & lint
+      - name: Install deps
+        run: npm ci || npm i
+      - name: Build (capture log)
+        run: npm run build > ../audit-front-build.txt 2>&1 || true
+      - name: Lint (best effort)
+        run: npx eslint . --ext .jsx,.js,.ts,.tsx > ../audit-front-eslint.txt 2>&1 || true
+      - name: Find potential issues
         run: |
-          npm run build > ../audit-front-build.txt 2>&1 || true
-          npx eslint . --ext .jsx,.js,.ts,.tsx > ../audit-front-eslint.txt || true
-      - name: Dependency graph
-        run: |
-          npx madge --extensions js,jsx src > ../audit-front-madge.txt || true
-      - name: Find potential issues (hardcoded URLs, TODOs)
-        run: |
-          git ls-files | xargs grep -nE "http://localhost|TODO|FIXME" > ../audit-front-grep.txt || true
+          git ls-files | xargs grep -nE "http://localhost|TODO|FIXME" > ../audit-front-grep.txt 2>&1 || true
       - uses: actions/upload-artifact@v4
-        with: { name: frontend-audit, path: ../audit-front-*, if-no-files-found: ignore }
-
-  repo_overview:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - name: Tree & summary
-        run: |
-          git ls-files > audit-repo-files.txt
-          git log --oneline --decorate --graph -n 50 > audit-repo-log.txt
-          echo "# Audit Summary\n\n- See artifacts per module." > AUDIT_SUMMARY.md
-      - uses: actions/upload-artifact@v4
-        with: { name: repo-overview, path: |
-            audit-repo-files.txt
-            audit-repo-log.txt
-            AUDIT_SUMMARY.md
-          }
+        with:
+          name: frontend-audit
+          path: ../audit-front-*
